@@ -1,0 +1,275 @@
+// SASS variable overrides must be declared before loading up Active Admin's styles.
+//
+// To view the variables that Active Admin provides, take a look at
+// `app/assets/stylesheets/active_admin/mixins/_variables.scss` in the
+// Active Admin source.
+//
+// For example, to change the sidebar width:
+// $sidebar-width: 242px;
+
+// Active Admin's got SASS!
+
+$c3-dark-blue: #024B64;
+$c3-light-blue: #5FA7DB;
+$c3-grey-blue: #93A8B3;
+$c3-sidebar-border-color: #e6e6e6;
+$c3-sidebar-text-color: #FFFFFF;
+
+$sidebar-background: $c3-dark-blue;
+$sidebar-item-hover-background: $c3-light-blue;
+
+@import "active_admin/mixins";
+@import "arctic_admin";
+
+
+// Overriding any non-variable SASS must be done after the fact.
+// For example, to change the default status-tag color:
+//
+//   .status_tag { background: #6090DB; }
+
+.border-surround {
+  border: 1px solid black;
+  margin-left: 10px;
+  margin-right: 10px;
+}
+
+#utility_nav {
+  background-image: image-url("wwt-asynchrony-labs.png");
+  background-position: left center;
+  background-size: 100px;
+  background-size: contain;
+  background-repeat: no-repeat;
+}
+
+#active_admin_content {
+  .logo-container {
+    width: 100%;
+    height: 100px;
+    position: relative;
+    background-image: image-url("wwt-asynchrony-labs.png");
+    background-position: center center;
+    background-size: contain;
+    background-repeat: no-repeat;
+  }
+}
+
+.results_url {
+  width: 100%;
+}
+
+body.logged_in {
+  &.new, &.edit, &.create, &.update {
+    .input select {
+      width: 50%;
+    }
+  }
+}
+
+// C3 Styling for the lefthand nav bar
+
+.header #tabs li a {
+  color: $c3-grey-blue;
+}
+
+.header #tabs li.current a {
+    background-color: $c3-light-blue;
+    color: $c3-sidebar-text-color;
+}
+
+.header #tabs li a:hover {
+    color: $c3-sidebar-text-color;
+}
+
+.header .site_title {
+    background-color: $c3-dark-blue;
+    color: $c3-grey-blue;
+    border-bottom: 0px;
+    border-right: 1px solid $c3-sidebar-border-color;
+}
+
+// hide the remove button for request_option when creating a device_type
+li.request_option > fieldset > ol > li > a.has_many_remove {
+  display: none;
+}
+
+li.headers, li.step_variables {
+  margin-left: 10%;
+}
+
+.child-model {
+  border: 1px solid #5E6469;
+  padding: 10px;
+}
+
+.form-group {
+  padding-bottom: 0.5em;
+  background-color: #edf2f4;
+
+  > h3 {
+    margin: 0;
+    padding: 0.5em;
+    font-size: .9em;
+  }
+}
+.handle {
+  cursor: move;
+  background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABIAAAASCAQAAAD8x0bcAAAAf0lEQVR4AY2StQFCMRgGD5cOtzIzJCOEIZCODdgB1w2YJmPhbu+7q+L5hTcq7I5W+EORMYOjY4r8IMmMwPBoYEaSrySweNpHPZYET+Rp0jrbpE7tav1pNg+OFVs2P9yywkGCXIQJNAxd+n/sYsRNEsLHpRRIyRTKIhRYbhWp6Q6UWjTJFzpSIQAAAABJRU5ErkJggg==');
+  background-repeat: no-repeat;
+  padding-left: 22px;
+  background-position: 0 1px;
+  margin-top: 10px;
+}
+
+$triangle-size: 15px;
+$triangle-color: $c3-dark-blue;
+
+.accordion-toggle {
+  cursor: pointer;
+  outline-style: none;
+  box-shadow: none;
+  border-color: transparent;
+  position: relative;
+  padding-left: $triangle-size * 3;
+  transition: all 5s;
+  word-break: break-word;
+
+  &:after {
+    content: "";
+    position: absolute;
+    width: 0;
+    height: 0;
+    top: 50%;
+    left: 0;
+    border-left: $triangle-size solid transparent;
+    border-right: $triangle-size solid transparent;
+    border-bottom: 0 solid transparent;
+    border-top: $triangle-size solid $triangle-color;
+    transform: translateY(-50%);
+  }
+}
+
+.ui-accordion-collapsed {
+  > ol {
+    display: flex;
+    align-items: center;
+
+    > .ui-accordion-header-collapsed {
+      flex-grow: 100;
+
+      &.accordion-toggle:after {
+        border-top: $triangle-size solid transparent;
+        border-bottom: $triangle-size solid transparent;
+        border-left: $triangle-size solid $triangle-color;
+        border-right: 0 solid transparent;
+      }
+
+      & ~ li {
+        margin: 0 10px 0 0;
+        flex-grow: 0;
+        white-space: nowrap;
+      }
+    }
+  }
+}
+
+.has_many_delete {
+  margin-left: 0 !important;
+}
+
+ul.errors, ol.errors {
+  margin-top: 10px;
+  margin-bottom: 10px;
+  color: $error;
+}
+
+textarea {
+  height: 160px;
+}
+
+.step-name {
+  font-weight: normal;
+  padding-left: 10px;
+  display: inline-block;
+}
+
+#active_admin_content .formtastic {
+  .inline-hints {
+    margin-left: 25%;
+    font-weight: bold;
+    font-size: smaller;
+
+    & + ul {
+      margin-left: 25%;
+      li {
+        list-style: disc;
+        margin-left: 20px;
+        font-weight: bold;
+        font-size: smaller;
+      }
+    }
+  }
+}
+
+$text-spacing: 4px;
+$trigger-dimension: 20px;
+$input-margin-bottom: 20px; // Note: this value is not *used* in active_admin, but is parameterized here to explain below values.
+$input-border-spacing: 6px; // Note: this value is not *used* in active_admin, but is parameterized here to explain below values.
+
+.arcus_tooltip_trigger {
+  position: relative;
+  left: 75%;
+  margin-left: 10px;
+  top: $input-border-spacing;
+  width: $trigger-dimension + $text-spacing;
+  height: $trigger-dimension + $text-spacing;
+  text-align: center;
+  line-height: $trigger-dimension + $text-spacing;
+  font-size: $trigger-dimension;
+  color: white;
+  background-color: tint($c3-dark-blue, 60%);
+  border: 1px solid tint($c3-dark-blue, 40%);
+  font-weight: bold;
+  font-family: serif;
+  border-radius: $trigger-dimension;
+  margin-bottom: -$trigger-dimension;
+
+  .aligned_boolean & {
+    top: 0;
+  }
+}
+
+.ui-tooltip {
+  display: block;
+  position: absolute;
+  border: 1px solid $c3-dark-blue;
+  padding: 7px;
+  border-radius: 5px;
+  box-shadow: 0 0 1px 1px $c3-dark-blue;
+  background-color: white;
+  max-width: 200px;
+  white-space: pre-wrap;
+}
+
+.ui-helper-hidden-accessible {
+  display: none;
+}
+
+body .aligned_boolean.input input[type='checkbox'] {
+  width: 15px;
+  margin-top: 9px;
+}
+
+.accordion-toggle {
+    display: flex;
+    align-items: center;
+}
+
+.step-order {
+  flex-grow: 0;
+  white-space: nowrap;
+}
+
+.step-name {
+  flex-grow: 100;
+  padding-right: 5px;
+}

@@ -1,0 +1,11 @@
+version: "2.1"
+services:
+  web:
+    ports:
+      - "${ARCUS_HTTPS_PORT}:443"
+    environment:
+      NGINX_SSL_PRIVATE: /etc/nginx/server-key.pem
+      NGINX_SSL_PUBLIC:  /etc/nginx/server-cert.pem
+    volumes:
+      - "${ARCUS_CERT_DIR}/${ARCUS_CERT_KEY}:/etc/nginx/server-key.pem:ro"
+      - "${ARCUS_CERT_DIR}/${ARCUS_CERT_FILE}:/etc/nginx/server-cert.pem:ro"

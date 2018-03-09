@@ -1,0 +1,77 @@
+device_types:
+  - name: UCS Central
+    steps:
+      - name: Auth
+        apply_template: false
+        request_option:
+          http_method: post
+          basic_auth: false
+          body: <aaaLogin inName="${xml(username)}" inPassword="${xml(password)}" />
+        step_variables:
+          - name: cookie
+            source_type: xpath
+            value: /aaaLogin/@outCookie
+      - name: Query
+        apply_template: true
+        request_option:
+          http_method: post
+          basic_auth: false
+      - name: Logoff
+        apply_template: false
+        request_option:
+          http_method: post
+          basic_auth: false
+          body: <aaaLogout inCookie="${xml(cookie)}" />
+
+templates:
+  - name: UCS Permitted VLANs
+    device_type: UCS Central
+    request_option:
+      http_method: post
+      body: |
+        <configResolveClasses cookie="${xml(cookie)}" inHierarchical="false">
+          <inIds>
+            <Id value="fabricVlan" />
+          </inIds>
+        </configResolveClasses>
+    transformation: |
+      <?xml version="1.0" encoding="ISO-8859-1"?>
+      <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+        <xsl:template match="/">
+          <root>
+            <xsl:for-each select="configResolveClasses/outConfigs/fabricVlan">
+              <xsl:sort select="@name"/>
+              <results>
+                <data><xsl:value-of select="@dn"/></data>
+                <label><xsl:value-of select="@name"/></label>
+              </results>
+            </xsl:for-each>
+          </root>
+        </xsl:template>
+      </xsl:stylesheet>
+
+  - name: UCS MAC Pools
+    device_type: UCS Central
+    request_option:
+      http_method: post
+      body: |
+        <configResolveClasses cookie="${xml(cookie)}" inHierarchical="false">
+          <inIds>
+            <Id value="macpoolPool" />
+          </inIds>
+        </configResolveClasses>
+    transformation: |
+      <?xml version="1.0" encoding="ISO-8859-1"?>
+      <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+        <xsl:template match="/">
+          <root>
+            <xsl:for-each select="configResolveClasses/outConfigs/macpoolPool">
+              <xsl:sort select="@name"/>
+              <results>
+                <data><xsl:value-of select="@dn"/></data>
+                <label><xsl:value-of select="@name"/></label>
+              </results>
+            </xsl:for-each>
+          </root>
+        </xsl:template>
+      </xsl:stylesheet>

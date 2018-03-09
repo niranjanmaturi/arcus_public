@@ -1,0 +1,73 @@
+device_types:
+  - name: ViPR
+    steps:
+      - name: Auth
+        apply_template: false
+        request_option:
+          url: login
+          http_method: get
+          basic_auth: true
+        step_variables:
+          - name: token
+            source_type: header
+            value: X-SDS-AUTH-TOKEN
+      - name: Query
+        apply_template: true
+        request_option:
+          http_method: get
+          basic_auth: false
+          headers:
+            - name: X-SDS-AUTH-TOKEN
+              value: ${token}
+      - name: Logout
+        apply_template: false
+        request_option:
+          url: logout
+          http_method: get
+          basic_auth: false
+          headers:
+            - name: X-SDS-AUTH-TOKEN
+              value: ${token}
+
+templates:
+  - name: ViPR Hosts
+    device_type: ViPR
+    request_option:
+      url: compute/hosts.json
+      http_method: get
+    transformation: |
+      <?xml version="1.0" encoding="ISO-8859-1"?>
+      <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+        <xsl:template match="/">
+          <root>
+            <xsl:for-each select="root/host/host">
+              <xsl:sort select="name"/>
+              <results>
+                <data><xsl:value-of select="id"/></data>
+                <label><xsl:value-of select="name"/></label>
+              </results>
+            </xsl:for-each>
+          </root>
+        </xsl:template>
+      </xsl:stylesheet>
+
+  - name: ViPR Host IP Interfaces
+    device_type: ViPR
+    request_option:
+      url: compute/hosts/${host_id}/ip-interfaces.json
+      http_method: get
+    transformation: |
+      <?xml version="1.0" encoding="ISO-8859-1"?>
+      <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+        <xsl:template match="/">
+          <root>
+            <xsl:for-each select="root/ip-interface/ip-interface">
+              <xsl:sort select="name"/>
+              <results>
+                <data><xsl:value-of select="id"/></data>
+                <label><xsl:value-of select="name"/></label>
+              </results>
+            </xsl:for-each>
+          </root>
+        </xsl:template>
+      </xsl:stylesheet>

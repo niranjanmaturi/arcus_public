@@ -1,0 +1,29 @@
+version: "2.1"
+services:
+  web:
+    image: "arcus:${ARCUS_TAG}"
+    restart: always
+    environment:
+      DB_PASS: "${PRODUCTION_PASSWORD}"
+      MYSQL_DB_CA:       /etc/nginx/ca-cert.pem
+      MYSQL_DB_KEY:      /etc/nginx/mysql-key.pem
+      MYSQL_DB_CERT:     /etc/nginx/mysql-cert.pem
+      MYSQL_DB_VERIFY:   "true"
+    volumes:
+      - "${INSTALL_DIR}/certs/ca-cert.pem:/etc/nginx/ca-cert.pem:ro"
+      - "${INSTALL_DIR}/certs/mysql-key.pem:/etc/nginx/mysql-key.pem:ro"
+      - "${INSTALL_DIR}/certs/mysql-cert.pem:/etc/nginx/mysql-cert.pem:ro"
+  db:
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: "${PRODUCTION_PASSWORD}"
+    volumes:
+      - "${INSTALL_DIR}/certs/ca-cert.pem:/etc/mysql/ca-cert.pem:ro"
+      - "${INSTALL_DIR}/certs/mysql-key.pem:/etc/mysql/mysql-key.pem:ro"
+      - "${INSTALL_DIR}/certs/mysql-cert.pem:/etc/mysql/mysql-cert.pem:ro"
+      - "${INSTALL_DIR}/certs/require_ssl.sql:/docker-entrypoint-initdb.d/require_ssl.sql:ro"
+      - "${MYSQL_DATA_DIR}:/var/lib/mysql"
+    command:
+      - --ssl-ca=/etc/mysql/ca-cert.pem
+      - --ssl-key=/etc/mysql/mysql-key.pem
+      - --ssl-cert=/etc/mysql/mysql-cert.pem

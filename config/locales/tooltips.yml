@@ -1,0 +1,53 @@
+en:
+  active_admin:
+    tooltips:
+      device_types:
+        name: A unique name that identifies this device type.
+        steps:
+          name: A name that identifies the step. Note that this is an internal label only.
+          apply_template: |
+            When selected, the template is applied during this step. Any settings from the template will be merged with this step's settings. If the same setting is configured in both, the template setting overrides the step setting. The template's transformation will be applied to the response body.
+
+            Note: One and only one step must apply the template transformation.
+          request_option:
+            url: The path (relative to the base URL of the device) used when sending the request to the device.
+            http_method: The type of HTTP method to use when sending the request.
+            body: If the device needs information in the body of the request, enter it here. (e.g. XML or JSON)
+            basic_auth: When selected, include the basic authentication header using the device credentials.
+            headers:
+              name: The name of the HTTP header.
+              value: The value of the HTTP header.
+          step_variables:
+            name: A name that identifies the Variable. It can be referenced in subsequent variables and steps to insert the associated value.
+            source_type: How the variable is set. See description in the dropdown list.
+            value: The meaning of this field changes depending on which source is chosen. See the dropdown list or Documentation PDF for more info.
+      templates:
+        device_type: The Device Type for this template.
+        name: The internal name for this template.
+        description: Internal field used to assist other users to know what this template does and the information it returns.
+        transformation: An XSL Transformation to convert the returned data into the proper format for output. Must be a valid XSLT. See the Documentation PDF for examples.
+        request_option:
+          url: The path (relative to the base URL of the device) used when sending the request to the device.
+          http_method: The type of HTTP method to use when sending the request.
+          body: If the device needs information in the body of the request, enter it here. (e.g. XML or JSON)
+          headers:
+            name: The name of the HTTP header.
+            value: The value of the HTTP header.
+      service_accounts:
+        name: The internal name for this Arcus API Account.
+        description: The internal description for this Arcus API Account.
+        username: The username for this account. Used to retrieve results from Arcus.
+        password: The password for this account. Used to retrieve results from Arcus.
+        password_confirmation: Confirm the password entered above.
+      devices:
+        device_type: The Device Type for this device.
+        name: The internal name for this device.
+        base_url: The root path to the device (i.e. http://example.com or http://192.168.92.1). Note that all other requests are relative to this URL.
+        ssl_validation: If set to false, Arcus will not verify the validity of SSL certificate when connecting to this device.
+        username: The username that should be used to connect to the device. The Device Type determines exactly how this is transmitted to the device for authentication.
+        password: The password that should be used to connect to the device. The Device Type determines exactly how this is transmitted to the device for authentication.
+      admin_users:
+        role: |
+          Members can perform all functions except managing other Admin Users.
+
+          Admins can do everything Members can do and also manage Admin Users.

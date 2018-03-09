@@ -1,0 +1,90 @@
+device_types:
+  - name: ACI
+    steps:
+      - name: Auth
+        apply_template: false
+        request_option:
+          url: api/aaaLogin.json
+          http_method: post
+          basic_auth: false
+          body: |
+            {
+              "aaaUser": {
+                "attributes": {
+                  "name": "${json(username)}",
+                  "pwd": "${json(password)}"
+                }
+              }
+            }
+        step_variables:
+          - name: cookie
+            source_type: header
+            value: Set-Cookie
+      - name: Query
+        apply_template: true
+        request_option:
+          http_method: get
+          basic_auth: false
+          headers:
+            - name: Cookie
+              value: ${cookie}
+      - name: Logoff
+        apply_template: false
+        request_option:
+          url: api/aaaLogout.json
+          http_method: post
+          basic_auth: false
+          headers:
+            - name: Cookie
+              value: ${cookie}
+          body: |
+            {
+              "aaaUser": {
+                "attributes": {
+                  "name": "${json(username)}"
+                }
+              }
+            }
+
+templates:
+  - name: ACI VLANs
+    device_type: ACI
+    request_option:
+      url: api/node/class/fvnsVlanInstP.json
+      http_method: get
+    transformation: |
+      <?xml version="1.0" encoding="ISO-8859-1"?>
+      <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+        <xsl:template match="/">
+          <root>
+            <xsl:for-each select="root/imdata/imdatum">
+              <xsl:sort select="fvnsVlanInstP/attributes/name"/>
+              <results>
+                <data><xsl:value-of select="fvnsVlanInstP/attributes/dn"/></data>
+                <label><xsl:value-of select="fvnsVlanInstP/attributes/name"/></label>
+              </results>
+            </xsl:for-each>
+          </root>
+        </xsl:template>
+      </xsl:stylesheet>
+
+  - name: ACI Leaf Policy Groups
+    device_type: ACI
+    request_option:
+      url: api/node/class/infraAccBndlGrp.json
+      http_method: get
+    transformation: |
+      <?xml version="1.0" encoding="ISO-8859-1"?>
+      <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+        <xsl:template match="/">
+          <root>
+            <xsl:for-each select="root/imdata/imdatum">
+              <xsl:sort select="infraAccBndlGrp/attributes/name"/>
+              <results>
+                <data><xsl:value-of select="infraAccBndlGrp/attributes/dn"/></data>
+                <label><xsl:value-of select="infraAccBndlGrp/attributes/name"/></label>
+              </results>
+            </xsl:for-each>
+          </root>
+        </xsl:template>
+      </xsl:stylesheet>

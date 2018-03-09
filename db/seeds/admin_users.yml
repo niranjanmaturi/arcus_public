@@ -1,0 +1,5 @@
+admin_users:
+  - email: admin@example.com
+    password: password1
+    password_confirmation: password1
+    role: admin

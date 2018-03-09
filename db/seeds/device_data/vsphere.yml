@@ -1,0 +1,234 @@
+device_types:
+  - name: vSphere
+    steps:
+      - name: Login
+        apply_template: false
+        request_option:
+          http_method: post
+          basic_auth: false
+          body: |
+            <?xml version="1.0"?>
+            <soap:Envelope
+            xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/"
+            soap:encodingStyle="http://www.w3.org/2003/05/soap-encoding">
+              <soap:Body>
+                <vim25:Login xmlns:vim25="http://example.com">
+                  <vim25:_this type="SessionManager">SessionManager</vim25:_this>
+                  <vim25:userName>${xml(username)}</vim25:userName>
+                  <vim25:password>${xml(password)}</vim25:password>
+                </vim25:Login>
+            </soap:Body>
+            </soap:Envelope>
+          headers:
+            - name: soapAction
+              value: urn:vim25/6.0
+            - name: Content-Type
+              value: text/xml
+        step_variables:
+          - name: cookie
+            source_type: header
+            value: Set-Cookie
+      - name: Service Content
+        apply_template: false
+        request_option:
+          http_method: post
+          basic_auth: false
+          headers:
+            - name: soapAction
+              value: urn:vim25/6.0
+            - name: Content-Type
+              value: text/xml
+            - name: Cookie
+              value: ${cookie}
+          body: |
+            <?xml version="1.0"?>
+            <soap:Envelope
+            xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/"
+            soap:encodingStyle="http://www.w3.org/2003/05/soap-encoding">
+              <soap:Body>
+                <vim25:RetrieveServiceContent xmlns:vim25="http://example.com">
+                  <vim25:_this type="ServiceInstance">ServiceInstance</vim25:_this>
+                </vim25:RetrieveServiceContent>
+            </soap:Body>
+            </soap:Envelope>
+        step_variables:
+          - name: rootFolder
+            source_type: xpath
+            value: //*[name()="rootFolder"]/text()
+          - name: propertyCollector
+            source_type: xpath
+            value: //*[name()="propertyCollector"]/text()
+      - name: Query
+        apply_template: true
+        request_option:
+          http_method: post
+          basic_auth: false
+          headers:
+            - name: soapAction
+              value: urn:vim25/6.0
+            - name: Content-Type
+              value: text/xml
+            - name: Cookie
+              value: ${cookie}
+      - name: Logout
+        apply_template: false
+        request_option:
+          http_method: post
+          basic_auth: false
+          body: |
+            <?xml version="1.0"?>
+            <soap:Envelope
+            xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/"
+            soap:encodingStyle="http://www.w3.org/2003/05/soap-encoding">
+              <soap:Body>
+                <vim25:Logout xmlns:vim25="http://example.com">
+                  <vim25:_this type="SessionManager">SessionManager</vim25:_this>
+                </vim25:Logout>
+            </soap:Body>
+            </soap:Envelope>
+          headers:
+            - name: soapAction
+              value: urn:vim25/6.0
+            - name: Content-Type
+              value: text/xml
+            - name: Cookie
+              value: ${cookie}
+
+templates:
+  - name: vSphere VM List
+    device_type: vSphere
+    request_option:
+      http_method: post
+      body: |
+        <?xml version="1.0"?>
+        <soap:Envelope
+        xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/"
+        soap:encodingStyle="http://www.w3.org/2003/05/soap-encoding"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+          <soap:Body>
+            <vim25:RetrieveProperties xmlns:vim25="http://example.com">
+              <vim25:_this type="PropertyCollector">${xml(propertyCollector)}</vim25:_this>
+              <vim25:specSet>
+                <propSet>
+                  <type>VirtualMachine</type>
+                  <pathSet>name</pathSet>
+                  <pathSet>guest.ipAddress</pathSet>
+                </propSet>
+                <objectSet>
+                  <obj type="Folder">${xml(rootFolder)}</obj>
+                  <selectSet xsi:type="TraversalSpec">
+                    <name>RootDelver</name>
+                    <type>Folder</type>
+                    <path>childEntity</path>
+                    <selectSet>
+                      <name>DatacenterDelver</name>
+                    </selectSet>
+                  </selectSet>
+                  <selectSet xsi:type="TraversalSpec">
+                    <name>DatacenterDelver</name>
+                    <type>Datacenter</type>
+                    <path>vmFolder</path>
+                    <selectSet>
+                      <name>FolderDelver</name>
+                    </selectSet>
+                  </selectSet>
+                  <selectSet xsi:type="TraversalSpec">
+                    <name>FolderDelver</name>
+                    <type>Folder</type>
+                    <path>childEntity</path>
+                    <selectSet>
+                      <name>FolderDelver</name>
+                    </selectSet>
+                  </selectSet>
+                </objectSet>
+              </vim25:specSet>
+            </vim25:RetrieveProperties>
+          </soap:Body>
+        </soap:Envelope>
+    transformation: |
+      <?xml version="1.0" encoding="ISO-8859-1"?>
+      <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:vim="urn:vim25">
+        <xsl:template match="/soapenv:Envelope/soapenv:Body/vim:RetrievePropertiesResponse">
+          <root>
+            <xsl:for-each select="vim:returnval">
+              <xsl:sort select="vim:propSet[./vim:name/text()='name']/vim:val"/>
+              <xsl:variable name="data" select="vim:propSet[./vim:name/text()='guest.ipAddress']/vim:val"/>
+              <xsl:variable name="label" select="vim:propSet[./vim:name/text()='name']/vim:val"/>
+              <results>
+                <data><xsl:value-of select="$data"/></data>
+                <label><xsl:value-of select="$label"/></label>
+              </results>
+            </xsl:for-each>
+          </root>
+        </xsl:template>
+      </xsl:stylesheet>
+
+  - name: vSphere VM List (no blanks)
+    device_type: vSphere
+    request_option:
+      http_method: post
+      body: |
+        <?xml version="1.0"?>
+        <soap:Envelope
+        xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/"
+        soap:encodingStyle="http://www.w3.org/2003/05/soap-encoding"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+          <soap:Body>
+            <vim25:RetrieveProperties xmlns:vim25="http://example.com">
+              <vim25:_this type="PropertyCollector">${xml(propertyCollector)}</vim25:_this>
+              <vim25:specSet>
+                <propSet>
+                  <type>VirtualMachine</type>
+                  <pathSet>name</pathSet>
+                  <pathSet>guest.ipAddress</pathSet>
+                </propSet>
+                <objectSet>
+                  <obj type="Folder">${xml(rootFolder)}</obj>
+                  <selectSet xsi:type="TraversalSpec">
+                    <name>RootDelver</name>
+                    <type>Folder</type>
+                    <path>childEntity</path>
+                    <selectSet>
+                      <name>DatacenterDelver</name>
+                    </selectSet>
+                  </selectSet>
+                  <selectSet xsi:type="TraversalSpec">
+                    <name>DatacenterDelver</name>
+                    <type>Datacenter</type>
+                    <path>vmFolder</path>
+                    <selectSet>
+                      <name>FolderDelver</name>
+                    </selectSet>
+                  </selectSet>
+                  <selectSet xsi:type="TraversalSpec">
+                    <name>FolderDelver</name>
+                    <type>Folder</type>
+                    <path>childEntity</path>
+                    <selectSet>
+                      <name>FolderDelver</name>
+                    </selectSet>
+                  </selectSet>
+                </objectSet>
+              </vim25:specSet>
+            </vim25:RetrieveProperties>
+          </soap:Body>
+        </soap:Envelope>
+    transformation: |
+      <?xml version="1.0" encoding="ISO-8859-1"?>
+      <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:vim="urn:vim25">
+        <xsl:template match="/soapenv:Envelope/soapenv:Body/vim:RetrievePropertiesResponse">
+          <root>
+            <xsl:for-each select="vim:returnval">
+              <xsl:sort select="vim:propSet[./vim:name/text()='name']/vim:val"/>
+              <xsl:variable name="data" select="vim:propSet[./vim:name/text()='guest.ipAddress']/vim:val"/>
+              <xsl:variable name="label" select="vim:propSet[./vim:name/text()='name']/vim:val"/>
+              <xsl:if test="$data != ''">
+                <results>
+                  <data><xsl:value-of select="$data"/></data>
+                  <label><xsl:value-of select="$label"/></label>
+                </results>
+              </xsl:if>
+            </xsl:for-each>
+          </root>
+        </xsl:template>
+      </xsl:stylesheet>

@@ -1,0 +1,29 @@
+# Arcus
+
+## Results
+
+* [GET devices/:device_id/templates/:template_id/results.:format - authorization happy paths - basic auth - it returns the correct data](results/get_devicesdevice_idtemplatestemplate_idresults.format/authorization_happy_paths/basic_auth/it_returns_the_correct_data.markdown)
+* [GET devices/:device_id/templates/:template_id/results.:format - authorization happy paths - cookie auth - it returns the correct data](results/get_devicesdevice_idtemplatestemplate_idresults.format/authorization_happy_paths/cookie_auth/it_returns_the_correct_data.markdown)
+* [GET devices/:device_id/templates/:template_id/results.:format - authorization happy paths - token auth - it returns the correct data](results/get_devicesdevice_idtemplatestemplate_idresults.format/authorization_happy_paths/token_auth/it_returns_the_correct_data.markdown)
+* [GET devices/:device_id/templates/:template_id/results.:format - authorization happy paths - ucs - returns the correct data](results/get_devicesdevice_idtemplatestemplate_idresults.format/authorization_happy_paths/ucs/returns_the_correct_data.markdown)
+* [GET devices/:device_id/templates/:template_id/results.:format - authorization happy paths - with parameter - it returns the correct data](results/get_devicesdevice_idtemplatestemplate_idresults.format/authorization_happy_paths/with_parameter/it_returns_the_correct_data.markdown)
+* [GET devices/:device_id/templates/:template_id/results.:format - bad authentication - it returns the proper 401 error code](results/get_devicesdevice_idtemplatestemplate_idresults.format/bad_authentication/it_returns_the_proper_401_error_code.markdown)
+* [GET devices/:device_id/templates/:template_id/results.:format - host not found - bad hostname - it returns a 200 with no name and error in displayName](results/get_devicesdevice_idtemplatestemplate_idresults.format/host_not_found/bad_hostname/it_returns_a_200_with_no_name_and_error_in_displayname.markdown)
+* [GET devices/:device_id/templates/:template_id/results.:format - host not found - connection refused - it returns a 200 with no name and error in displayName](results/get_devicesdevice_idtemplatestemplate_idresults.format/host_not_found/connection_refused/it_returns_a_200_with_no_name_and_error_in_displayname.markdown)
+* [GET devices/:device_id/templates/:template_id/results.:format - host not found - timing out - it returns a 200 with no name and error in displayName](results/get_devicesdevice_idtemplatestemplate_idresults.format/host_not_found/timing_out/it_returns_a_200_with_no_name_and_error_in_displayname.markdown)
+* [GET devices/:device_id/templates/:template_id/results.:format - missing parameter - it returns a 200 with no name and error in displayName](results/get_devicesdevice_idtemplatestemplate_idresults.format/missing_parameter/it_returns_a_200_with_no_name_and_error_in_displayname.markdown)
+* [GET devices/:device_id/templates/:template_id/results.:format - no authentication - it returns the proper 401 error code](results/get_devicesdevice_idtemplatestemplate_idresults.format/no_authentication/it_returns_the_proper_401_error_code.markdown)
+* [GET devices/:device_id/templates/:template_id/results.:format - with missing device - it returns the proper 404 error code](results/get_devicesdevice_idtemplatestemplate_idresults.format/with_missing_device/it_returns_the_proper_404_error_code.markdown)
+* [GET devices/:device_id/templates/:template_id/results.:format - with missing template - it returns the proper 404 error code](results/get_devicesdevice_idtemplatestemplate_idresults.format/with_missing_template/it_returns_the_proper_404_error_code.markdown)
+* [GET devices/:device_id/templates/:template_id/results.:format - with non matching device types on device and template - it returns a 200 with no name and error in displayName](results/get_devicesdevice_idtemplatestemplate_idresults.format/with_non_matching_device_types_on_device_and_template/it_returns_a_200_with_no_name_and_error_in_displayname.markdown)
+
+## Templates
+
+* [POST /admin/templates/perform_import - it redirects to the index page](templates/post_admintemplatesperform_import/it_redirects_to_the_index_page.markdown)
+* [POST /admin/templates/perform_import - when passed a file - it creates the templates from the file](templates/post_admintemplatesperform_import/when_passed_a_file/it_creates_the_templates_from_the_file.markdown)
+* [POST /admin/templates/perform_import - when passed a file - it has no alert messages when successful](templates/post_admintemplatesperform_import/when_passed_a_file/it_has_no_alert_messages_when_successful.markdown)
+* [POST /admin/templates/perform_import - when passed a file - with an invalid device type - it rejects all the new templates and displays the errors](templates/post_admintemplatesperform_import/when_passed_a_file/with_an_invalid_device_type/it_rejects_all_the_new_templates_and_displays_the_errors.markdown)
+* [POST /admin/templates/perform_import - when passed a file - with an invalid device type and a duplicate name - it rejects all the new templates and displays the errors](templates/post_admintemplatesperform_import/when_passed_a_file/with_an_invalid_device_type_and_a_duplicate_name/it_rejects_all_the_new_templates_and_displays_the_errors.markdown)
+* [POST /admin/templates/perform_import - when passed a file - with multiple duplicate names - it rejects all the new templates and displays the errors](templates/post_admintemplatesperform_import/when_passed_a_file/with_multiple_duplicate_names/it_rejects_all_the_new_templates_and_displays_the_errors.markdown)
+* [POST /admin/templates/perform_import - when the file does not contain JSON - it redirects to the index page with a warning](templates/post_admintemplatesperform_import/when_the_file_does_not_contain_json/it_redirects_to_the_index_page_with_a_warning.markdown)
+

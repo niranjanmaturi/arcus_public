@@ -1,0 +1,26 @@
+version: "2.1"
+services:
+  web:
+    ports:
+      - "443:443"
+    environment:
+      NGINX_SSL_PRIVATE: /etc/nginx/localhost-key.pem
+      NGINX_SSL_PUBLIC:  /etc/nginx/localhost-cert.pem
+      MYSQL_DB_CA:       /etc/nginx/ca-cert.pem
+      MYSQL_DB_KEY:      /etc/nginx/localhost-key.pem
+      MYSQL_DB_CERT:     /etc/nginx/localhost-cert.pem
+      MYSQL_DB_VERIFY:   "true"
+    volumes:
+      - ./certs/ca-cert.pem:/etc/nginx/ca-cert.pem:ro
+      - ./certs/localhost-key.pem:/etc/nginx/localhost-key.pem:ro
+      - ./certs/localhost-cert.pem:/etc/nginx/localhost-cert.pem:ro
+  db:
+    volumes:
+      - ./certs/ca-cert.pem:/etc/mysql/ca-cert.pem:ro
+      - ./certs/mysql-key.pem:/etc/mysql/mysql-key.pem:ro
+      - ./certs/mysql-cert.pem:/etc/mysql/mysql-cert.pem:ro
+      - ./certs/require_ssl.sql:/docker-entrypoint-initdb.d/require_ssl.sql:ro
+    command:
+      - --ssl-ca=/etc/mysql/ca-cert.pem
+      - --ssl-key=/etc/mysql/mysql-key.pem
+      - --ssl-cert=/etc/mysql/mysql-cert.pem

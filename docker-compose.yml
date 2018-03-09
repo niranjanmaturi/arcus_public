@@ -1,0 +1,27 @@
+version: "2.1"
+services:
+  web:
+    build: .
+    ports:
+      - "${ARCUS_HTTP_PORT}:80"
+    environment:
+      DB_HOST: mysql
+      DB_USER: root
+      DB_PASS: root
+      SECRET_KEY_BASE: 00bb2e65256a361b1f9540bf28a153d1b0c3299768dda2eb344823b3c77825157ffc3725f3e79f3d0b1b7ef34fb2c3f66f34cea48ee5b695f13f4c3541d6eabb
+      DATA_ENCRYPTION_KEY: 256d885d6ba375392c7bacb50f4de22afc2019d10dbd2957f6f0e73645305920b404d1d6bdb69f02a2baae544191fc76305d99153aee93ac8d10df28befe7a42
+      DATA_SALT: 4068e824e77fde3110e9d55b1fbb0ee7723f45732ad4a90b0055b887b863aeae348f4e2423d4f772f7d7568f8f145ad34b5ff421813dc54f811d675bd6db5d2f
+    networks:
+      arcus:
+  db:
+    image: mariadb:latest
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+    healthcheck:
+      test: ["CMD-SHELL", "mysqladmin ping --host=localhost --user=root --password=$$MYSQL_ROOT_PASSWORD"]
+    networks:
+      arcus:
+        aliases:
+         - mysql
+networks:
+  arcus:

@@ -1,0 +1,84 @@
+# Files in the config/locales directory are used for internationalization
+# and are automatically loaded by Rails. If you want to use locales other
+# than English, add the necessary files in this directory.
+#
+# To use the locales, use `I18n.t`:
+#
+#     I18n.t 'hello'
+#
+# In views, this is aliased to just `t`:
+#
+#     <%= t('hello') %>
+#
+# To use a different locale, set it with `I18n.locale`:
+#
+#     I18n.locale = :es
+#
+# This would use the information in config/locales/es.yml.
+#
+# To learn more, please read the Rails Internationalization guide
+# available at http://guides.rubyonrails.org/i18n.html.
+
+en:
+  hello: "Hello world"
+  obscured_placeholder: '********'
+  susbstition_help: Field accepts variable substition
+  password_help_html: 'Passwords must:<br /><ul><li>Be between 7 and 255 characters</li><li>Not contain spaces</li><li>Contain at least one number (0-9)</li><li>Contain at least one letter (a-z or A-Z)</li></ul>'
+  active_admin:
+    powered_by: "Version 1.0.0"
+    access_denied:
+      admin/device_types:
+        destroy:
+          message: 'Cannot destroy Device Types that are currently in use on Templates or Devices.'
+    batch_actions:
+      action_label: "%{title}"
+      labels:
+        destroy: "Delete selected"
+        export_as_json: "Export selected as JSON"
+        export_as_csv: "Export selected as CSV"
+  activerecord:
+    models:
+      service_account:
+        one: 'Arcus API Account'
+        human: 'Arcus API Account'
+        other: 'Arcus API Accounts'
+    attributes:
+      step:
+        name: Step Name
+        sort_order: Execution Order
+      header:
+        name: Header Name
+        value: Header Value
+      step_variable:
+        name: Variable Name
+        value: Variable Value
+        source_type: Variable Source
+        sort_order: Execution Order
+    errors:
+      models:
+        admin_user:
+          attributes:
+            password:
+              blank: 'Re-enter both passwords, passwords do not match'
+            password_confirmation:
+              confirmation: 'Re-enter both passwords, passwords do not match'
+        service_account:
+          attributes:
+            username:
+              taken: 'is already in use'
+            password:
+              blank: 'Re-enter both passwords, passwords do not match'
+            password_confirmation:
+              confirmation: 'Re-enter both passwords, passwords do not match'
+        device:
+          attributes:
+            name:
+              taken: 'is already in use'
+        template:
+          attributes:
+            name:
+              taken: 'is already in use'
+        device_type:
+          attributes:
+            name:
+              taken: 'is already in use'

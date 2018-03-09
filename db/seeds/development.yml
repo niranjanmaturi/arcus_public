@@ -1,0 +1,43 @@
+admin_users:
+  - email: member@example.com
+    password: password1
+    password_confirmation: password1
+    role: member
+
+devices:
+  - name: Test F5
+    device_type: F5
+    base_url: https://f5-ve-ano-a.sandbox.wwtatc.local/mgmt/tm/
+    username: admin
+    password: WWTwwt1!
+    ssl_validation: false
+  - name: Test ACI
+    device_type: ACI
+    base_url: https://10.255.241.15/
+    username: admin
+    password: ACInsx1!
+    ssl_validation: false
+  - name: Test ViPR
+    device_type: ViPR
+    base_url: https://emc-vipr-ano-mgmt.sandbox.wwtatc.local:4443/
+    username: root
+    password: ACInsx1!
+    ssl_validation: false
+  - name: Test UCS
+    device_type: UCS Central
+    base_url: https://10.253.11.143/xmlIM/
+    username: admin
+    password: Cisc0123
+    ssl_validation: false
+  - name: Test vSphere
+    device_type: vSphere
+    base_url: https://vmw-vcsa-ano-a.sandbox.wwtatc.local/sdk/vimService.wsdl?wsdl
+    username: c3-admin@vsphere.local
+    password: ACInsx1!
+    ssl_validation: false
+
+service_accounts:
+  - name: C3 Sandbox
+    username: sandbox
+    password: password1
+    password_confirmation: password1

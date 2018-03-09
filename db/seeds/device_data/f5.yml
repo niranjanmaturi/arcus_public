@@ -1,0 +1,51 @@
+device_types:
+  - name: F5
+    steps:
+      - name: Query
+        apply_template: true
+        request_option:
+          http_method: get
+          basic_auth: true
+
+templates:
+  - name: F5 Node by Name
+    device_type: F5
+    request_option:
+      url: ltm/node
+      http_method: get
+    transformation: |
+      <?xml version="1.0" encoding="ISO-8859-1"?>
+      <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+        <xsl:template match="/">
+          <root>
+            <xsl:for-each select="root/items/item">
+              <xsl:sort select="name"/>
+              <results>
+                <data><xsl:value-of select="address"/></data>
+                <label><xsl:value-of select="name"/></label>
+              </results>
+            </xsl:for-each>
+          </root>
+        </xsl:template>
+      </xsl:stylesheet>
+
+  - name: F5 Node by FullPath
+    device_type: F5
+    request_option:
+      url: ltm/node
+      http_method: get
+    transformation: |
+      <?xml version="1.0" encoding="ISO-8859-1"?>
+      <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+        <xsl:template match="/">
+          <root>
+            <xsl:for-each select="root/items/item">
+              <xsl:sort select="fullPath"/>
+              <results>
+                <data><xsl:value-of select="address"/></data>
+                <label><xsl:value-of select="fullPath"/></label>
+              </results>
+            </xsl:for-each>
+          </root>
+        </xsl:template>
+      </xsl:stylesheet>

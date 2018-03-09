@@ -1,0 +1,25 @@
+default: &default
+  adapter: mysql2
+  pool: <%= (ENV['WEB_CONCURRENCY'] || 2).to_i * (ENV['RAILS_MAX_THREADS'] || 5 ).to_i %>
+  timeout: 5000
+  host: <%= ENV['DB_HOST'] || '127.0.0.1' %>
+  sslca: <%= ENV['MYSQL_DB_CA'] %>
+  sslkey: <%= ENV['MYSQL_DB_KEY'] %>
+  sslcert: <%= ENV['MYSQL_DB_CERT'] %>
+  sslverify: <%= ENV['MYSQL_DB_VERIFY'] %>
+
+development:
+  <<: *default
+  database: arcus_development
+  username: root
+  password: root
+test:
+  <<: *default
+  database: arcus_test<%= ENV['TEST_ENV_NUMBER'] %>
+  username: root
+  password: <%= ENV['DB_PASS'] || 'root' %>
+production:
+  <<: *default
+  database: arcus
+  username: <%= ENV['DB_USER'] || 'root' %>
+  password: <%= ENV['DB_PASS'] || 'root' %>

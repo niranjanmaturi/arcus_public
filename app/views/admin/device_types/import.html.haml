@@ -1,0 +1,4 @@
+= semantic_form_for 'json_file', url: perform_import_admin_device_types_path, builder: ActiveAdmin::FormBuilder do |f|
+  = f.inputs 'Upload File' do
+    = f.input :file, as: :file
+  = f.actions
